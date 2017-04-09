@@ -41,7 +41,7 @@ compute_index_weights <- function(marketCapitalizations){
 #'
 #'@export
 
-compute_index_volatility <- function(indexWeights,constituentVolatilities,indexCovariance){
+compute_index_volatility <- function(indexWeights,indexCovariance){
     indexVolatility <- sqrt(t(indexWeights)%*%indexCovariance%*%indexWeights)
     indexVolatility
 }
