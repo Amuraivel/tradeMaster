@@ -18,17 +18,28 @@ compute_market_capitalization <- function(shareCount,sharePrice){
 #'
 #'@param marketCapitalizations : a vector of market capitalizations of the index's constituents
 #'
-#'@param shareFloats : a numeric vector of shares
-#'
 #'@return weights : a vector of weights for the index
-#'
-#'@example
 #'
 #'@export
 compute_index_weights <- function(marketCapitalizations){
-  weights <- marketCapitalization/sum(marketCapitalizations)
+  weights <- marketCapitalizations/sum(marketCapitalizations)
   weights
 }
+
+
+#' Print "Compute Index Weights"
+#'
+#' This function computes the weights of the index constituents based on the market capitalization based on the floats
+#'
+#'@param marketCapitalizations : a vector of market capitalizations of the index's constituents
+#'
+#'@param constituentVolatilities
+#'
+#'@param indexCovariance
+#'
+#'@return indexVolatility : a volatility for the index
+#'
+#'@export
 
 compute_index_volatility <- function(indexWeights,constituentVolatilities,indexCovariance){
     indexVolatility <- sqrt(t(indexWeights)%*%indexCovariance%*%indexWeights)
@@ -36,9 +47,8 @@ compute_index_volatility <- function(indexWeights,constituentVolatilities,indexC
 }
 
 
-compute_constituent_volatilities <- function(indexWeights,indexVolatility,indexCovariance){
-
-}
+#compute_constituent_volatilities <- function(indexWeights,indexVolatility,indexCovariance){
+#}
 
 
 #temp <- cbind(c(1,2,3,4),rnorm(4,0,1))
