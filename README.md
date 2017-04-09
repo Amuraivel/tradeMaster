@@ -3,4 +3,12 @@
 Overview and Introduction
 =========================
 
-This is a practice package for writing software in R to do index volatility arbitrage.
+This is a practice package for writing software in R to do various common hedge fund strategies.
+
+Index Volatility Arbitrage
+==========================
+
+Long-Short Equity
+=================
+
+WRqs58cH7Q9TgqZ9Qfx4
