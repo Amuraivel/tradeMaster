@@ -11,3 +11,6 @@ This is a practice package for writing software in R to do  various common hedge
 #Index Volatility Arbitrage
 
 #Long-Short Equity
+
+
+WRqs58cH7Q9TgqZ9Qfx4
