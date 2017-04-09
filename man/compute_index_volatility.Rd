@@ -4,14 +4,14 @@
 \alias{compute_index_volatility}
 \title{Print "Compute Index Weights"}
 \usage{
-compute_index_volatility(indexWeights, constituentVolatilities, indexCovariance)
+compute_index_volatility(indexWeights, indexCovariance)
 }
 \arguments{
 \item{indexWeights}{: a vector of market capitalizations of the index's constituents}
 
-\item{constituentVolatilities}{}
-
 \item{indexCovariance}{}
+
+\item{constituentVolatilities}{}
 }
 \value{
 indexVolatility : a volatility for the index
