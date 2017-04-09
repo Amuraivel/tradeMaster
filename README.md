@@ -1,10 +1,3 @@
----
-output: github_document
----
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# Overview and Introduction
-
 This is a practice package to do index volatility arbitrage.
-
