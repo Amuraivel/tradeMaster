@@ -2,7 +2,7 @@
 % Please edit documentation in R/index_volatility_arbitrage.R
 \name{compute_market_capitalization}
 \alias{compute_market_capitalization}
-\title{Print "Market Capitalization"}
+\title{Compute Market Capitalization}
 \usage{
 compute_market_capitalization(shareCount, sharePrice)
 }

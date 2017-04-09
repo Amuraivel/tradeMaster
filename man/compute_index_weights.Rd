@@ -8,8 +8,6 @@ compute_index_weights(marketCapitalizations)
 }
 \arguments{
 \item{marketCapitalizations}{: a vector of market capitalizations of the index's constituents}
-
-\item{shareFloats}{: a numeric vector of shares}
 }
 \value{
 weights : a vector of weights for the index

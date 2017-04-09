@@ -31,7 +31,7 @@ compute_index_weights <- function(marketCapitalizations){
 #'
 #' This function computes the weights of the index constituents based on the market capitalization based on the floats
 #'
-#'@param marketCapitalizations : a vector of market capitalizations of the index's constituents
+#'@param indexWeights : a vector of market capitalizations of the index's constituents
 #'
 #'@param constituentVolatilities
 #'
