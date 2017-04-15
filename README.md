@@ -11,4 +11,6 @@ Index Volatility Arbitrage
 Long-Short Equity
 =================
 
+https://travis-ci.org/Amuraivel/tradeMaster.svg?branch=master
+
 WRqs58cH7Q9TgqZ9Qfx4
