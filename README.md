@@ -13,9 +13,6 @@ Zero-Beta Long-Short Equity
 Carry
 ==========================
 
-Carry
-==========================
-
 
 
 [![Build Status](https://travis-ci.org/Amuraivel/tradeMaster.svg?branch=master)](https://travis-ci.org/Amuraivel/tradeMaster)
