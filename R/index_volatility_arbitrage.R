@@ -46,9 +46,22 @@ compute_index_volatility <- function(indexWeights,indexCovariance){
     indexVolatility
 }
 
+#' Print "Compute Index Weights"
+#'
+#' This function computes the weights of the index constituents based on the market capitalization based on the floats
+#'
+#'@param indexWeights : a vector of market capitalizations of the index's constituents
+#'
+#'@param indexCovariance : a covariance matrix for the index
+#'
+#'@param asset : a number or label
+#'
+#'@return indexVolatility : returns the vol
+#'
+#'@export
+compute_constituent_volatilities <- function(indexWeights,indexCovariance,asset){
 
-#compute_constituent_volatilities <- function(indexWeights,indexVolatility,indexCovariance){
-#}
+}
 
 
 #temp <- cbind(c(1,2,3,4),rnorm(4,0,1))
