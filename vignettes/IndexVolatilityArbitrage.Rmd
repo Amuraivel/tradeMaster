@@ -10,6 +10,13 @@ vignette: >
 ---
 Index volatility arbitrage is a strategy whereby an investor buys options on the index (e.g. S&P 500, Nikkei) and sells options in the constituent stocks, or sells index options and buys options on the constituent stocks.
 
+The key issues with this strategy are:
+  - Transaction costs
+  - Descreteness both in the index options and constituents
+  - Continuous delta hedging
+
+$$ \frac{\nabla P}{\dC} $$
+
 The `html_vignette` format:
 
 - Never uses retina figures
