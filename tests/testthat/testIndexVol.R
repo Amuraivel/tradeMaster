@@ -15,3 +15,9 @@ test_that("Volworks",{
 
 })
 
+#prices <- apply(dat[,which(grepl(".Close$",names(dat)) == 1 )],2,mean,na.rm=TRUE)
+#prices <- prices[-8]
+#weights <-  prices / sum(prices)
+#weights <- weights[order(weights)]
+
+#test_that("Weights ",{}

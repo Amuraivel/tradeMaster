@@ -1,29 +1,24 @@
-#' Compute Market Capitalization
+#' Compute Index Weights
+#' This function returns the weights of the index constituents by empirically estimating them using a linear model.
+#' It presumes that the index is perfectly arbitraged. It presumes there are enough observations since the last change
+#' in the index constituents or weightings.
 #'
-#' This function returns market capitalizations for a vector of stocks
-#' @param shareCount : count of shares
+#' @param returnMatrix : A well-formed matrix of returns.
 #'
-#' @param sharePrice : price per share
+#' @param indexTicker : A named column for the index returns
 #'
-#' @return Returns a market capitalization or a vector of capitalizations
+#' @return weights : a vector of weights empirically estimated from the return matrix, or be returned using
+#'
+#' @notes Future implementations could incorporate an API call to an external data-source to compute the weights using market cap
 #'
 #' @export
-compute_market_capitalization <- function(shareCount,sharePrice){
-  marketCapitalization <- shareCount*sharePrice
-}
-
-#' Print "Compute Index Weights"
-#'
-#' This function computes the weights of the index constituents based on the market capitalization based on the floats
-#'
-#'@param marketCapitalizations : a vector of market capitalizations of the index's constituents
-#'
-#'@return weights : a vector of weights for the index
-#'
-#'@export
-compute_index_weights <- function(marketCapitalizations){
-  weights <- marketCapitalizations/sum(marketCapitalizations)
-  weights
+get_index_weights <- function(indexTicker,returnMatrix){
+  #Linear regression
+  f <- paste(paste(indexTicker), paste("-1",paste(names(tsDat)[which(names(tsDat)!=indexTicker)],collapse="+"),sep="+"),sep="~")
+  f <- as.formula(f)
+  weightsModel <- lm(f,data=returnMatrix)
+  #Return the coefficients
+  coef(weightsModel)
 }
 
 

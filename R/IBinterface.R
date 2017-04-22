@@ -53,12 +53,56 @@ tsDat <- diff(log(tsDat))
 tsDat <- tsDat[complete.cases(tsDat),]
 cor(tsDat)
 
-weightModel <- lm(DIA.Close~-1+.,data=tsDat)
-prices <- apply(dat[,which(grepl(".Close$",names(dat)) == 1 )],2,mean,na.rm=TRUE)
-prices <- prices[-8]
-weights <-  prices / sum(prices)
-weights <- weights[order(weights)]
-imputedWeights <- coef(weightModel)[order(coef(weightModel))]
+
+tws <- twsConnect()
+contract  <- twsEquity("AAPL",'SMART','ISLAND')
+reqMktData(tws, contract,snapshot = FALSE, tickGenerics = "100,101,104,106,165,221,225,236")
+
+# remove tickPrice action
+myWrapper <- eWrapper()
+
+myWrapper$tickPrice <- function(msg, timestamp, file, ...) {}
+
+# add new tickPrice action
+myWrapper$tickPrice <- function(msg, timestamp, file, ...) {print(paste("Fuck my anus.")) cancelMktData(tws,0)}
+
+myWrapper$tickGeneric <- function(msg, timestamp, file, ...) {}
+myWrapper$tickGeneric <- function(msg, timestamp, file, ...) { cancelMktData(tws,0) }
+
+# add new data into the object, and retrieve
+myWrapper$assign.Data("myData", 1010)
+myWrapper$get.Data("myData")
+
+## Not run:
+tws <- twsConnect()
+reqMktData(tws, twsSTK("SBUX"), eventWrapper=myWrapper)
+twsDisconnect(tws)
+
+reqMktData(tws, snapshot = TRUE, Contract=twsSTK("SBUX"),tickGenerics="106,165,221,225,236")
+reqMktData(tws, snapshot = TRUE, Contract=twsSTK("SBUX"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 comparison <- data.frame(trueWeights=weights,imputedWeights=imputedWeights)
 comparison$delta <- comparison[,2] - comparison[,1]
@@ -75,8 +119,6 @@ fn <- function(t,Y,X){
   return(amat)
 }
 
-
-constrained <- glmc(DIA.WAP~-1+.,Amat=fn(nrow(tsDat),Y=tsDat[,"DIA.WAP"],X=tsDat[,-31]),data=tsDat)
 
 
  read.csv(paste0(workingDirectory,"/data/AAPL.csv"),header=FALSE)
