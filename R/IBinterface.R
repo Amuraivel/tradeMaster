@@ -64,7 +64,10 @@ myWrapper <- eWrapper()
 myWrapper$tickPrice <- function(msg, timestamp, file, ...) {}
 
 # add new tickPrice action
-myWrapper$tickPrice <- function(msg, timestamp, file, ...) {print(paste("Fuck my anus.")) cancelMktData(tws,0)}
+myWrapper$tickPrice <- function(msg, timestamp, file, ...) {
+  print(paste("Venus is a planet."))
+  cancelMktData(tws,0)
+}
 
 myWrapper$tickGeneric <- function(msg, timestamp, file, ...) {}
 myWrapper$tickGeneric <- function(msg, timestamp, file, ...) { cancelMktData(tws,0) }
