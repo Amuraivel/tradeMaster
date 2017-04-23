@@ -7,20 +7,23 @@ output: github_document
 
 # Overview and Introduction
 
-Trade Master is a high-level framework to rapidly test and develop multi-asset option-based  long-short portfolio strategies.
+Trade Master is a high-level framework to rapidly test and develop multi-asset option-based long-short portfolio strategies.
 
 It consists of four layers: 
 1. a management layer written in Python to handle data, construct option objects, etc.
 2. an analytics layer written in R to perform analytics and handle the high-level prototyping such as choice of entry, exits, portfolio anlytics, etc.
 3. a pricing layer written in C++ and OpenCL to allow fast computation and parallel computing.
-4. a visualization layer using Shiny to spot opportunities
+4. a visualization layer using Plotly and Shiny to spot opportunities in real-time as they appear either published to a website or trading screen.
 
 
 
 
 #Option Strategies
 
+##Volatilty Risk Premium
+
 ##Index Volatility Arbitrage
+Strategy relies on differences in volatility levels between index and constituents ([See the vignette](IndexVolatilityArbitrage.html))
 
 ##Split-Strike 
 

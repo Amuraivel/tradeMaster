@@ -19,11 +19,7 @@ indices     <- dbGetQuery(con, "SELECT * FROM Indices")
 dbDisconnect(con)
 
 
-
-#US0378331005
-
-indices <- rbind(indices,c("DIA","DOW"))
-
+field <- "TRADES"
 tws <- twsConnect()
 #Get historical data
 for (i in 1:nrow(indices)){
@@ -31,15 +27,16 @@ for (i in 1:nrow(indices)){
   ticker    <- indices[i,"ticker"]
   #Create contract
   contract  <- twsEquity(paste(ticker),'SMART')
+  if(ticker %in% c("CSCO","MSFT","AAPL","INTC")) contract <-  twsEquity(paste(ticker),'SMART','ISLAND')
   #Assign it to the environment
-  assign(ticker,reqHistoricalData(tws,contract,barSize="1 hour",duration="1 Y"))
+  assign(ticker,reqHistoricalData(tws,contract,barSize="1 min",duration="1 M",whatToShow=field))
   #build the data frame
 
   Sys.sleep(10)
   print(paste(ticker))
 }
 
-ticks <-indices$ticker[order(indices$ticker)]# c("AAPL","BA","CAT","CVX","GS","MMM","DIS","DIA")
+ticks <-indices$ticker[order(indices$ticker)]#
   for (i in 1:length(ticks)){
     #Get ticker
     ticker    <- ticks[i]
@@ -48,10 +45,44 @@ ticks <-indices$ticker[order(indices$ticker)]# c("AAPL","BA","CAT","CVX","GS","M
     dat <<- merge(dat,d)
 }
 
+ %>% gather()
+
+
 tsDat <- dat[,which(grepl(".Close$",names(dat)) == 1 )]
 tsDat <- diff(log(tsDat))
 tsDat <- tsDat[complete.cases(tsDat),]
+names(tsDat) <- indices$ticker
 cor(tsDat)
+
+weights <- tsDat[nrow(tsDat),-which(names(tsDatPX) %in% c("DIA","SPY","QQQ"))]
+weights <- weights/sum(weights)
+
+
+indexWeights <- cov(tsDatPX[,-which(names(tsDatPX) %in% c("DIA","SPY","QQQ"))])
+rM <- tsDatPX[,-which(names(tsDatPX) %in% c("","SPY","QQQ"))]
+get_index_weights("DIA",returnMatrix = rM)
+compute_index_volatility <- compute_index_volatility(weights,SIGMA)
+
+
+
+
+constituentIV <- tsDatVol[,-which(names(tsDatVol) %in% c("DIA","SPY","QQQ"))]
+
+
+timeScale <- 252*6.5*60
+computeIndexIVfromConstituentIV(weights,optionCovariance,constituentIV,timeScale)
+
+
+weights <- sum()
+
+tsDat[1:2,-c(31:33)]
+
+lm(QQQ ~ -1 + AAPL + MMM + AXP  + BA + CAT + CVX + CSCO + KO + DD +
+  XOM + GE + GS + HD + IBM + INTC + JNJ + JPM + MCD + MRK +
+  MSFT + NKE + PFE + PG + TRV + UNH + UTX + VZ + V + WMT +
+  DIS, tsDatPX[1:100,])
+
+
 
 
 tws <- twsConnect()
@@ -92,11 +123,6 @@ reqMktData(tws, snapshot = TRUE, Contract=twsSTK("SBUX"))
 
 
 
-
-
-SIGMA <- cov(tsDat[,-8])
-get_index_weights(tsDat[,-8])
-compute_index_volatility <- compute_index_volatility()
 
 
 
