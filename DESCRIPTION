@@ -2,7 +2,7 @@ Package: tradeMaster
 Title: A Framework for Multi-Asset Multi-Strategy Option Portfolios
 Version: 0.0.0.1000
 Authors@R: person("Mark", "Thompson", email = "amuraivel@gmail.com", role = c("aut", "cre"))
-Description: tradeMaster is a general purpose high-level framework for testing option portfolio strategies. It is not portfolio tools rather it enables a user to create various trading strategies in a uniform manner.
+Description: tradeMaster is a general purpose high-level framework for testing option portfolio strategies. It enables a user to create various option-based trading strategies in a uniform manner.
 Depends: R (>= 3.3.3)
 License: GPL
 Encoding: UTF-8
