@@ -95,7 +95,7 @@ reqMktData(tws, snapshot = TRUE, Contract=twsSTK("SBUX"))
 
 
 SIGMA <- cov(tsDat[,-8])
-
+get_index_weights(tsDat[,-8])
 compute_index_volatility <- compute_index_volatility()
 
 
