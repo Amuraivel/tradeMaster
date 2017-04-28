@@ -19,7 +19,7 @@ indices     <- dbGetQuery(con, "SELECT * FROM Indices")
 dbDisconnect(con)
 
 
-field <- "TRADES"
+field <- "TRADES" # "OPTION_IMPLIED_VOLATILITY"
 tws <- twsConnect()
 #Get historical data
 for (i in 1:nrow(indices)){
@@ -29,7 +29,7 @@ for (i in 1:nrow(indices)){
   contract  <- twsEquity(paste(ticker),'SMART')
   if(ticker %in% c("CSCO","MSFT","AAPL","INTC")) contract <-  twsEquity(paste(ticker),'SMART','ISLAND')
   #Assign it to the environment
-  assign(ticker,reqHistoricalData(tws,contract,barSize="1 min",duration="1 M",whatToShow=field))
+  assign(ticker,reqHistoricalData(tws,contract,barSize="1 sec",duration="10 min",whatToShow=field))
   #build the data frame
 
   Sys.sleep(10)
