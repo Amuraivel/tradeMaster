@@ -45,9 +45,6 @@ ticks <-indices$ticker[order(indices$ticker)]#
     dat <<- merge(dat,d)
 }
 
- %>% gather()
-
-
 tsDat <- dat[,which(grepl(".Close$",names(dat)) == 1 )]
 tsDat <- diff(log(tsDat))
 tsDat <- tsDat[complete.cases(tsDat),]
