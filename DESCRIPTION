@@ -10,8 +10,9 @@ LazyData: true
 Imports: 
 	tidyr, 
 	dplyr, 
-	IBrokers, 
 	readr, 
+	IBrokers, 
+	quantmod,
 	RSQLite
 Suggests: 
 	knitr, 
