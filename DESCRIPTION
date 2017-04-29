@@ -13,10 +13,9 @@ Imports:
 	readr, 
 	IBrokers, 
 	quantmod,
-	RSQLite
-Suggests: 
 	knitr, 
 	rmarkdown, 
-	testthat
+	testthat,
+	RSQLite	
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
