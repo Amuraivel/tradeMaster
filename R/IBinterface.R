@@ -11,8 +11,8 @@ library(RSQLite)
 #dbWriteTable(con, "Indices", indices)
 #rm(indices)
 #dbListTables(con)
-workingDirectory <- "~/Programming/tradeMaster";
-setwd(workingDirectory)
+#workingDirectory <- "~/Programming/tradeMaster";
+#setwd(workingDirectory)
 
 con         <- dbConnect(RSQLite::SQLite(),"./data/database_file.sqlite")
 indices     <- dbGetQuery(con, "SELECT * FROM Indices")
