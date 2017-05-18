@@ -18,9 +18,42 @@ con         <- dbConnect(RSQLite::SQLite(),"./data/database_file.sqlite")
 indices     <- dbGetQuery(con, "SELECT * FROM Indices")
 dbDisconnect(con)
 
+tblES <- as.tbl(cbind(data.frame(id=index(ES)),data.frame(ES[,1:ncol(ES)])))
+
+my_db <- src_mysql(host = "patstat.cq2v32gzlgqv.us-west-2.rds.amazonaws.com", user = "mark",
+                   password = "june11octo17",dbname="AWS")
+copy_to(my_db,tblES,"IB_FUTURES",temporary=FALSE)
+tbl(my_db,"IB_FUTURES")
+
+db_insert_to(con = my_db$con, table = "IB_FUTURES", )
+write_to(name="IB_FUTURES",schema="AWS")
+
+
+
+
 
 field <- "TRADES" # "OPTION_IMPLIED_VOLATILITY"
 tws <- twsConnect()
+
+twsFuture()
+future <- twsFuture("ES","GLOBEX","201706")
+#assign("ES",reqHistoricalData(tws,future,barSize="1 min",duration="5 D",whatToShow=field))
+
+
+myWrapper <- eWrapper()
+myWrapper$tickPrice <- function(msg, timestamp, file, ...) {}
+
+# add new tickPrice action
+myWrapper$tickPrice <- function(msg, timestamp, file, ...) {
+  print(paste("Call back called."))
+  #print(paste(msg))
+  print(paste(cat("tickPrice",msg))
+  #cancelMktData(tws,0)
+}
+reqMktData(tws,future,tickGenerics="106",eventWrapper = myWrapper)
+
+
+
 #Get historical data
 for (i in 1:nrow(indices)){
   #Get ticker
@@ -29,7 +62,7 @@ for (i in 1:nrow(indices)){
   contract  <- twsEquity(paste(ticker),'SMART')
   if(ticker %in% c("CSCO","MSFT","AAPL","INTC")) contract <-  twsEquity(paste(ticker),'SMART','ISLAND')
   #Assign it to the environment
-  assign(ticker,reqHistoricalData(tws,contract,barSize="1 sec",duration="10 min",whatToShow=field))
+  assign(ticker,reqHistoricalData(tws,contract,barSize="1 sec",duration="5 min",whatToShow=field))
   #build the data frame
 
   Sys.sleep(10)

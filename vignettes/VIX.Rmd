@@ -1,0 +1,94 @@
+---
+title: "Marginal Response of VIX"
+author: "Mark James Thompson"
+date: "5/18/2017"
+output: pdf_document
+---
+#Introduction
+
+One of the problems with trading the VIX is that the instrument is typically traded with futures. Since the futures settle on the final day, the marginal response of the contract varies as the contract approaches expiration. 
+
+It's however difficult to know how just how much "pop" a contract will experience with a change in the VIX. This analysis attempts to recover that relation empirically.
+
+#Data
+The dat consists of the VIX contract chain with with 45 days to expiration or less, which comprises the first and second month.
+
+
+$$\Delta[ln[futurePrice]] = \alpha + \beta (\Delta[ln[Vindex]]) + \gamma (\Delta[ln[Vindex]] \cdot \text{fractionOfTimeRemaning}) + \delta \text{fractionOfTimeRemaning} + \epsilon $$
+```{r load,echo=FALSE,include=FALSE}
+#LOAD NECESSARY TOOLS
+library(dplyr)
+library(readr)
+library(tidyr)
+library(Quandl)
+library(RMySQL)
+library(DBI)
+library(ggplot2)
+#Read the VIX contract chain data
+#VIXcontracts <- read_csv("~/Desktop/VIX.csv")
+
+#REASHAPE INTO A TIDY DATASET
+#VIXdat <- VIXcontracts %>% gather(key=expirationDate,value=futurePrice,-`Future Roll Date`) %>% 
+ # rename(observationDate=`Future Roll Date`) %>% 
+  #transform(observationDate = as.Date(observationDate,"%m/%d/%Y")) %>% 
+  #filter(!is.na(observationDate)) %>% 
+  #transform(expirationDate = as.Date(expirationDate,"%d.%m.%Y")) %>% 
+  #filter(!is.na(futurePrice)) %>% mutate(DTE= expirationDate - observationDate) %>% 
+  #filter(DTE >= 0) %>% transform(DTE=as.numeric(DTE)) %>% filter(DTE < 46) %>% 
+  #transform(futurePrice = as.numeric(futurePrice)) %>% 
+  #transform(expirationDate = as.character(expirationDate)) 
+
+#optionDB <- dbConnect(RMySQL::MySQL(),"OPTION_DATA",host = "thompson.internet-box.ch", user = "",password = "")
+#dbWriteTable(optionDB, "VIXdat", VIXdat)
+
+#This is from the DB using our access
+VIXdat <- src_mysql("OPTION_DATA",host = "thompson.internet-box.ch", user = "areteGroup",password = "optionTrader") %>% tbl("VIXdat") %>% select(-row_names) %>% transform(observationDate = as.Date(observationDate,format="%Y-%m-%d"))
+
+#GET THE VIX INDEX FROM QUANDL
+Quandl.api_key("tyNA1apCEZmn5L6_F2bh")
+VIX  	<- Quandl("CHRIS/CBOE_VX1")[,c("Trade Date","Settle")]
+names(VIX) <- c("observationDate","Vindex")
+#MERGE THE TWO
+dat <- merge(VIXdat,VIX,by="observationDate")
+dat <-  dat %>% group_by(expirationDate) %>%
+        #remove the na's
+        mutate(lFP = lag(futurePrice)) %>% filter(!is.na(lFP)) %>%
+        mutate(lVIX = lag(Vindex)) %>% filter(!is.na(lVIX)) %>%  
+        #Log diff it
+        transform(lnDFB = log(futurePrice)-log(lFP)) %>%
+        transform(lnDVix = log(Vindex)-log(lVIX)) 
+
+
+effect <- data.frame(DTE=0:43,coef=NA);
+for (i in 1:nrow(effect)){
+  vixFutureModel <- lm(lnDFB~lnDVix,data=subset(dat,DTE==effect[i,1]))
+  effect[i,"coef"] <- coef(vixFutureModel)[2]
+}
+```
+#Results
+```{r summary, echo=FALSE}
+#Use continuous fractional time
+continuousModel <- lm(lnDFB~lnDVix*I(DTE/45),data=dat)
+summary(continuousModel)
+```
+The results above indicate that on average, the future only response to about 30% of the VIX index change on average. The interaction term is insignificant, hinting that outliers or a data problem may be driving the results.
+
+These results imply that an outright vix future may not be the best instrument to hedge short vega.
+
+```{r plot, fig.cap="There does seem to be an increase in sensitivity approaching the settlement date as option theory might suggest. Yet, the estimated coefficients for each day of expiration are not robust; outliers may be biasing the estimates.",echo=FALSE}
+ggplot(effect) +
+  geom_point(aes(DTE,coef)) +
+  geom_smooth(aes(DTE,coef),method = "lm", size = 1.5)
+```
+
+
+#Further Reseach
+
+1. Use intraday tick-data:
+  + To better estimate the marginal response within each DTE class;
+  + Estimate a time to expiration using a more continous model on a minute level with interaction term.
+2. Examine whether the marginal response is conditional on the level of the VIX.
+3. Examine whether the VSTOXX has the same coefficients.
+4. Combine VSTOXX and VIX data to jointly estimate the marginal response.
+5. Write an analytical model for the effects.
+6. Incorporate the model into trading.

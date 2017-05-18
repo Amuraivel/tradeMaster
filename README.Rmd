@@ -35,7 +35,7 @@ Strategy relies on differences in volatility levels between index and constituen
 
 
 
-
+[![Build Status](https://travis-ci.org/Amuraivel/tradeMaster.svg?branch=master)](https://travis-ci.org/Amuraivel/tradeMaster)
 
 
 WRqs58cH7Q9TgqZ9Qfx4
