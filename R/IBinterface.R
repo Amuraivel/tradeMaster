@@ -28,12 +28,107 @@ tbl(my_db,"IB_FUTURES")
 db_insert_to(con = my_db$con, table = "IB_FUTURES", )
 write_to(name="IB_FUTURES",schema="AWS")
 
+#'
+#'
+#'
+#'
+#'
+#' @export getPortfolioPositions
+getPortfolioPositions <<- function(positions){
+getPortfolioPosition <<- function(position){
+    contract         <- position$contract
+    portfolioValue   <- position$portfolioValue
+    data.frame(conID=contract$conId,
+               symbol=contract$symbol,
+               sectype=contract$sectype,
+               exch=contract$exch,
+               primary=contract$primary,
+               expiry=contract$expiry,
+               strike=contract$strike,
+               currency=contract$currency,
+               right=contract$right,
+               local=contract$local,
+               multiplier=contract$multiplier,
+               combo_legs_desc=contract$combo_legs_desc,
+               comboleg=contract$comboleg,
+               include_expired=contract$include_expired,
+               secIdType=contract$secIdType,
+               secId=contract$secId,
+               position=portfolioValue$position,
+               marketPrice=portfolioValue$marketPrice,
+               marketValue=portfolioValue$marketValue,
+               averageCost=portfolioValue$averageCost,
+               unrealizedPNL=portfolioValue$unrealizedPNL,
+               realizedPNL=portfolioValue$realizedPNL,
+               accountName=portfolioValue$accountName
+               )
+    }
 
+d <- NA
+for (i in 1:length(positions)){
+  if(i==1){
+    d <- getPortfolioPosition(positions[[i]])
+  } else {
+    d <- rbind(d,getPortfolioPosition(positions[[i]]))
+  }
+}
+d
+}
 
+positionArray <- getPortfolioPositions(positions)
+##Get the percent
+positionArray <- positionArray %>% group_by(symbol,expiry) %>%
+  mutate(totalPnL = sum(unrealizedPNL),mktValue = sum(marketValue),totalCost =  sum(averageCost) ) %>%
+  filter(expiry!="") %>%
+  mutate(percent = totalPnL/totalCost)  %>%
+  #Cast things to character
+  transform(conID = as.character(conID)) %>%
+  transform(symbol = as.character(symbol)) %>%
+  transform(sectype = as.character(sectype)) %>%
+  transform(exch = as.character(exch)) %>%
+  transform(primary = as.character(primary)) %>%
+  transform(expiry = as.character(expiry)) %>%
+  transform(strike = as.character(strike)) %>%
+  transform(currency = as.character(currency)) %>%
+  transform(right = as.character(right)) %>%
+  transform(local = as.character(local)) %>%
+  transform(multiplier = as.character(multiplier)) %>%
+  transform(combo_legs_desc = as.character(combo_legs_desc)) %>%
+  transform(comboleg = as.character(comboleg)) %>%
+  transform(secIdType = as.character(secIdType)) %>%
+  transform(secId = as.character(secId)) %>%
+  arrange(desc(percent))
 
+p <- 1;
+contract <- twsContract(
+            conId=positionArray[p,"conID"],
+            symbol=positionArray[p,"symbol"],
+            sectype=positionArray[p,"sectype"],
+            exch=positionArray[p,"exch"],
+            primary=positionArray[p,"primary"],
+            expiry=positionArray[p,"expiry"],
+            strike=positionArray[p,"strike"],
+            currency=positionArray[p,"currency"],
+            right=positionArray[p,"right"],
+            local=positionArray[p,"local"],
+            multiplier=positionArray[p,"multiplier"],
+            combo_legs_desc=positionArray[p,"combo_legs_desc"],
+            comboleg=positionArray[p,"comboleg"],
+            include_expired="0",
+            secIdType = positionArray[p,"secIdType"],
+            secId = positionArray[p,"secId"]
+)
 
 field <- "TRADES" # "OPTION_IMPLIED_VOLATILITY"
 tws <- twsConnect()
+id <- reqIds(tws)
+order <- twsOrder(id, action = "BUY", totalQuantity = "1",orderType = "LMT",lmtPrice = "1")
+#placeOrder(tws, contract, order)
+placeOrder(tws, contract, order)
+
+portfolio <- reqAccountUpdates(tws, acctCode = "LANDS")
+#Get element 2
+
 
 twsFuture()
 future <- twsFuture("ES","GLOBEX","201706")

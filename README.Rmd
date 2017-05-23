@@ -33,6 +33,7 @@ Strategy relies on differences in volatility levels between index and constituen
 
 ##Long-Short Equity Options
 
+##
 
 
 [![Build Status](https://travis-ci.org/Amuraivel/tradeMaster.svg?branch=master)](https://travis-ci.org/Amuraivel/tradeMaster)
